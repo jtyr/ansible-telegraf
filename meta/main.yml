@@ -1,0 +1,20 @@
+---
+
+galaxy_info:
+  author: Jiri Tyr
+  description: Role which installs and configures Telegraf
+  license: MIT
+  min_ansible_version: 2.1
+  platforms:
+    - name: EL
+      versions:
+        - 6
+        - 7
+    - name: Ubuntu
+      versions:
+        - trusty
+        - xenial
+  categories:
+    - monitoring
+dependencies:
+  - config_encoder_filters

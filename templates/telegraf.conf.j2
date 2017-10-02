@@ -1,0 +1,3 @@
+{{ ansible_managed | comment }}
+
+{{ telegraf_config | encode_toml(convert_bools=true, convert_nums=true) }}

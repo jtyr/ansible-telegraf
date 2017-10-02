@@ -1,0 +1,9 @@
+---
+
+- name: Restart Telegraf service
+  service:
+    name: "{{ telegraf_service }}"
+    state: restarted
+  when: >
+    telegraf_service_started is not defined or
+    not telegraf_service_started.changed

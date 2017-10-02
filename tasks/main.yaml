@@ -1,0 +1,67 @@
+---
+
+- name: Test distribution
+  assert:
+    that: >
+      ansible_os_family == 'RedHat' or
+      ansible_os_family == 'Debian'
+
+- name: Add YUM repo
+  yum_repository:
+    name: "{{ telegraf_pkg }}"
+    description: Influx YUM repo
+    baseurl: "{{ telegraf_yumrepo_url }}"
+    gpgkey: "{{ telegraf_yumrepo_gpgkey }}"
+    params: "{{ telegraf_yumrepo_params }}"
+  when: >
+    ansible_os_family == 'RedHat'
+  tags:
+    - telegraf_pkg
+
+- name: Add APT key
+  apt_key:
+    url: "{{ telegraf_apt_repo_key }}"
+    state: present
+  when: >
+    ansible_os_family == 'Debian'
+  tags:
+    - telegraf_pkg
+
+- name: Add APT repository
+  apt_repository:
+    repo: "{{ telegraf_apt_repo_string }}"
+  when: >
+    ansible_os_family == 'Debian'
+  tags:
+    - telegraf_pkg
+
+- name: Install Telegraf package
+  package:
+    name: telegraf
+  notify:
+    - Restart Telegraf service
+  tags:
+    - telegraf_pkg
+
+- name: Create Telegraf configuration file
+  template:
+    src: telegraf.conf.j2
+    dest: "{{ telegraf_config_file }}"
+  register: telegraf_config_result
+  notify:
+    - Restart Telegraf service
+  tags:
+    - telegraf_config
+
+- name: Make sure Telegraf service is enabled
+  service:
+    name: "{{ telegraf_service }}"
+    enabled: yes
+
+- name: Make sure Telegraf service is running
+  service:
+    name: "{{ telegraf_service }}"
+    state: started
+  register: telegraf_service_started
+  when: >
+      not telegraf_config_result.changed
