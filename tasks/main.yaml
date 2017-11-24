@@ -47,7 +47,6 @@
   template:
     src: telegraf.conf.j2
     dest: "{{ telegraf_config_file }}"
-  register: telegraf_config_result
   notify:
     - Restart Telegraf service
   tags:
@@ -63,5 +62,3 @@
     name: "{{ telegraf_service }}"
     state: started
   register: telegraf_service_started
-  when: >
-      not telegraf_config_result.changed
