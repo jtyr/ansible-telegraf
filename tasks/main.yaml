@@ -37,7 +37,7 @@
 
 - name: Install Telegraf package
   package:
-    name: telegraf
+    name: "{{ telegraf_pkg }}"
   notify:
     - Restart Telegraf service
   tags:
