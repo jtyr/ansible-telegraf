@@ -8,7 +8,7 @@
 
 - name: Add YUM repo
   yum_repository:
-    name: "{{ telegraf_pkg }}"
+    name: influx
     description: Influx YUM repo
     baseurl: "{{ telegraf_yumrepo_url }}"
     gpgkey: "{{ telegraf_yumrepo_gpgkey }}"
@@ -29,6 +29,7 @@
 
 - name: Add APT repository
   apt_repository:
+    filename: influx
     repo: "{{ telegraf_apt_repo_string }}"
   when: >
     ansible_os_family == 'Debian'
