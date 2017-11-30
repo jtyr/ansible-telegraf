@@ -38,9 +38,8 @@ Examples
   hosts: myhost2
   vars:
     telegraf_config_outputs:
-      - prometheus:
-          urls:
-            - http://localhost:9100/metrics
+      - prometheus_client:
+          - listen: :9273
   roles:
     - telegraf
 
