@@ -488,6 +488,7 @@ Dependencies
 
 - [`config_encoder_filters`](https://github.com/jtyr/ansible-config_encoder_filters)
 - [`influxdb`](https://github.com/jtyr/ansible-influxdb) (optional)
+- [`prometheus`](https://github.com/jtyr/ansible-prometheus) (optional)
 
 
 License
