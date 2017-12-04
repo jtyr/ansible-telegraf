@@ -59,11 +59,15 @@ Examples
   vars:
     telegraf_config_inputs__custom:
       - apache:
-          urls:
-            - http://localhost/server-status?auto
+          - urls:
+              - http://localhost/server-status?auto
       - docker:
-          endpoint: unix:///var/run/docker.sock
-          timeout: 5s
+          - endpoint: unix:///var/run/docker.sock
+            timeout: 5s
+      - net:
+          - interfaces:
+              - eth0
+      - netstat: [{}]
   roles:
     - telegraf
 ```
@@ -80,9 +84,6 @@ telegraf_yumrepo_url: "{{ influxdata_yum_repo_url | default('https://repos.influ
 
 # Yumrepo GPG key URL
 telegraf_yumrepo_gpgkey: "{{ influxdata_yum_repo_gpgkey | default('https://repos.influxdata.com/telegraf.key') }}"
-
-# Custom yumrepo params to add or override the existing one
-telegraf_yumrepo_params: {}
 
 # GPG key for the APT repo
 telegraf_apt_repo_key: "{{ influxdata_apt_repo_key | default('https://repos.influxdata.com/influxdb.key') }}"
@@ -162,7 +163,7 @@ telegraf_config_outputs_influxdb_retention_policy: ""
 telegraf_config_outputs_influxdb_write_consistency: any
 telegraf_config_outputs_influxdb_timeout: 5s
 
-# Default options of the influxdb output table
+# Default options of the first item of the influxdb output table
 telegraf_config_outputs_influxdb__default:
   urls: "{{ telegraf_config_outputs_influxdb_urls }}"
   database: "{{ telegraf_config_outputs_influxdb_database }}"
@@ -173,11 +174,20 @@ telegraf_config_outputs_influxdb__default:
 # Custom options of the influxdb output table
 telegraf_config_outputs_influxdb__custom: {}
 
-# Final influxdb output table
+# Default item of the influxdb output table
+telegraf_config_outputs_influxdb_item__default:
+  - "{{
+        telegraf_config_outputs_influxdb__default.update(
+        telegraf_config_outputs_influxdb__custom) }}{{
+        telegraf_config_outputs_influxdb__default }}"
+
+# Custom item of the influxdb output table
+telegraf_config_outputs_influxdb_item__custom: []
+
+# Final options of the influxdb output table
 telegraf_config_outputs_influxdb: "{{
-  telegraf_config_outputs_influxdb__default.update(
-  telegraf_config_outputs_influxdb__custom) }}{{
-  telegraf_config_outputs_influxdb__default }}"
+  telegraf_config_outputs_influxdb_item__default +
+  telegraf_config_outputs_influxdb_item__custom }}"
 
 
 # Default outputs
@@ -209,11 +219,20 @@ telegraf_config_inputs_cpu__default:
 # Custom options of the cpu input table
 telegraf_config_inputs_cpu__custom: {}
 
-# Final cpu input table
+# Default item of the cpu input table
+telegraf_config_inputs_cpu_item__default:
+  - "{{
+        telegraf_config_inputs_cpu__default.update(
+        telegraf_config_inputs_cpu__custom) }}{{
+        telegraf_config_inputs_cpu__default }}"
+
+# Custom item of the cpu input table
+telegraf_config_inputs_cpu_item__custom: []
+
+# Final options of the cpu input table
 telegraf_config_inputs_cpu: "{{
-  telegraf_config_inputs_cpu__default.update(
-  telegraf_config_inputs_cpu__custom) }}{{
-  telegraf_config_inputs_cpu__default }}"
+  telegraf_config_inputs_cpu_item__default +
+  telegraf_config_inputs_cpu_item__custom }}"
 
 
 # Values of the options of the default disk input table
@@ -229,11 +248,20 @@ telegraf_config_inputs_disk__default:
 # Custom options of the disk input table
 telegraf_config_inputs_disk__custom: {}
 
-# Final disk input table
+# Default item of the disk input table
+telegraf_config_inputs_disk_item__default:
+  - "{{
+        telegraf_config_inputs_disk__default.update(
+        telegraf_config_inputs_disk__custom) }}{{
+        telegraf_config_inputs_disk__default }}"
+
+# Custom item of the disk input table
+telegraf_config_inputs_disk_item__custom: []
+
+# Final options of the disk input table
 telegraf_config_inputs_disk: "{{
-  telegraf_config_inputs_disk__default.update(
-  telegraf_config_inputs_disk__custom) }}{{
-  telegraf_config_inputs_disk__default }}"
+  telegraf_config_inputs_disk_item__default +
+  telegraf_config_inputs_disk_item__custom }}"
 
 
 # Default options of the diskio input table
@@ -242,11 +270,20 @@ telegraf_config_inputs_diskio__default: {}
 # Custom options of the diskio input table
 telegraf_config_inputs_diskio__custom: {}
 
-# Final diskio input table
+# Default item of the diskio input table
+telegraf_config_inputs_diskio_item__default:
+  - "{{
+        telegraf_config_inputs_diskio__default.update(
+        telegraf_config_inputs_diskio__custom) }}{{
+        telegraf_config_inputs_diskio__default }}"
+
+# Custom item of the diskio input table
+telegraf_config_inputs_diskio_item__custom: []
+
+# Final options of the diskio input table
 telegraf_config_inputs_diskio: "{{
-  telegraf_config_inputs_diskio__default.update(
-  telegraf_config_inputs_diskio__custom) }}{{
-  telegraf_config_inputs_diskio__default }}"
+  telegraf_config_inputs_diskio_item__default +
+  telegraf_config_inputs_diskio_item__custom }}"
 
 
 # Default options of the kernel input table
@@ -255,11 +292,20 @@ telegraf_config_inputs_kernel__default: {}
 # Custom options of the kernel input table
 telegraf_config_inputs_kernel__custom: {}
 
-# Final kernel input table
+# Default item of the kernel input table
+telegraf_config_inputs_kernel_item__default:
+  - "{{
+        telegraf_config_inputs_kernel__default.update(
+        telegraf_config_inputs_kernel__custom) }}{{
+        telegraf_config_inputs_kernel__default }}"
+
+# Custom item of the kernel input table
+telegraf_config_inputs_kernel_item__custom: []
+
+# Final options of the kernel input table
 telegraf_config_inputs_kernel: "{{
-  telegraf_config_inputs_kernel__default.update(
-  telegraf_config_inputs_kernel__custom) }}{{
-  telegraf_config_inputs_kernel__default }}"
+  telegraf_config_inputs_kernel_item__default +
+  telegraf_config_inputs_kernel_item__custom }}"
 
 
 # Default options of the mem input table
@@ -268,11 +314,20 @@ telegraf_config_inputs_mem__default: {}
 # Custom options of the mem input table
 telegraf_config_inputs_mem__custom: {}
 
-# Final mem input table
+# Default item of the mem input table
+telegraf_config_inputs_mem_item__default:
+  - "{{
+        telegraf_config_inputs_mem__default.update(
+        telegraf_config_inputs_mem__custom) }}{{
+        telegraf_config_inputs_mem__default }}"
+
+# Custom item of the mem input table
+telegraf_config_inputs_mem_item__custom: []
+
+# Final options of the mem input table
 telegraf_config_inputs_mem: "{{
-  telegraf_config_inputs_mem__default.update(
-  telegraf_config_inputs_mem__custom) }}{{
-  telegraf_config_inputs_mem__default }}"
+  telegraf_config_inputs_mem_item__default +
+  telegraf_config_inputs_mem_item__custom }}"
 
 
 # Default options of the processes input table
@@ -281,11 +336,20 @@ telegraf_config_inputs_processes__default: {}
 # Custom options of the processes input table
 telegraf_config_inputs_processes__custom: {}
 
-# Final processes input table
+# Default item of the processes input table
+telegraf_config_inputs_processes_item__default:
+  - "{{
+        telegraf_config_inputs_processes__default.update(
+        telegraf_config_inputs_processes__custom) }}{{
+        telegraf_config_inputs_processes__default }}"
+
+# Custom item of the processes input table
+telegraf_config_inputs_processes_item__custom: []
+
+# Final options of the processes input table
 telegraf_config_inputs_processes: "{{
-  telegraf_config_inputs_processes__default.update(
-  telegraf_config_inputs_processes__custom) }}{{
-  telegraf_config_inputs_processes__default }}"
+  telegraf_config_inputs_processes_item__default +
+  telegraf_config_inputs_processes_item__custom }}"
 
 
 # Default options of the swap input table
@@ -294,11 +358,20 @@ telegraf_config_inputs_swap__default: {}
 # Custom options of the swap input table
 telegraf_config_inputs_swap__custom: {}
 
-# Final swap input table
+# Default item of the swap input table
+telegraf_config_inputs_swap_item__default:
+  - "{{
+        telegraf_config_inputs_swap__default.update(
+        telegraf_config_inputs_swap__custom) }}{{
+        telegraf_config_inputs_swap__default }}"
+
+# Custom item of the swap input table
+telegraf_config_inputs_swap_item__custom: []
+
+# Final options of the swap input table
 telegraf_config_inputs_swap: "{{
-  telegraf_config_inputs_swap__default.update(
-  telegraf_config_inputs_swap__custom) }}{{
-  telegraf_config_inputs_swap__default }}"
+  telegraf_config_inputs_swap_item__default +
+  telegraf_config_inputs_swap_item__custom }}"
 
 
 # Default options of the system input table
@@ -307,11 +380,20 @@ telegraf_config_inputs_system__default: {}
 # Custom options of the system input table
 telegraf_config_inputs_system__custom: {}
 
-# Final system input table
+# Default item of the system input table
+telegraf_config_inputs_system_item__default:
+  - "{{
+        telegraf_config_inputs_system__default.update(
+        telegraf_config_inputs_system__custom) }}{{
+        telegraf_config_inputs_system__default }}"
+
+# Custom item of the system input table
+telegraf_config_inputs_system_item__custom: []
+
+# Final options of the system input table
 telegraf_config_inputs_system: "{{
-  telegraf_config_inputs_system__default.update(
-  telegraf_config_inputs_system__custom) }}{{
-  telegraf_config_inputs_system__default }}"
+  telegraf_config_inputs_system_item__default +
+  telegraf_config_inputs_system_item__custom }}"
 
 
 # Default inputs
@@ -349,6 +431,55 @@ telegraf_config: "{{
   telegraf_config__default.update(
   telegraf_config__custom) }}{{
   telegraf_config__default }}"
+```
+
+The above `telegraf_config` creates the following configuration file:
+
+```toml
+[agent]
+collection_jitter = "0s"
+debug = false
+flush_interval = "10s"
+flush_jitter = "0s"
+hostname = ""
+interval = "10s"
+logfile = ""
+metric_batch_size = 1000
+metric_buffer_limit = 10000
+omit_hostname = false
+precision = ""
+quiet = false
+round_interval = true
+
+[global_tags]
+
+[[inputs.cpu]]
+collect_cpu_time = false
+percpu = true
+report_active = false
+totalcpu = true
+
+[[inputs.disk]]
+ignore_fs = ["tmpfs", "devtmpfs", "devfs"]
+
+[[inputs.diskio]]
+
+[[inputs.kernel]]
+
+[[inputs.mem]]
+
+[[inputs.processes]]
+
+[[inputs.swap]]
+
+[[inputs.system]]
+
+[[outputs.influxdb]]
+database = "telegraf"
+retention_policy = ""
+timeout = "5s"
+urls = ["http://127.0.0.1:8086"]
+write_consistency = "any"
 ```
 
 
