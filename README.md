@@ -83,13 +83,13 @@ List of variables used by the role:
 telegraf_yumrepo_url: "{{ influxdata_yum_repo_url | default('https://repos.influxdata.com/centos/$releasever/$basearch/stable') }}"
 
 # Yumrepo GPG key URL
-telegraf_yumrepo_gpgkey: "{{ influxdata_yum_repo_gpgkey | default('https://repos.influxdata.com/telegraf.key') }}"
-
-# GPG key for the APT repo
-telegraf_apt_repo_key: "{{ influxdata_apt_repo_key | default('https://repos.influxdata.com/influxdb.key') }}"
+telegraf_yumrepo_gpgkey: "{{ influxdata_yum_repo_gpgkey | default('https://repos.influxdata.com/influxdb.key') }}"
 
 # APT repo string
 telegraf_apt_repo_string: "{{ influxdata_apt_repo_string | default('deb https://repos.influxdata.com/ubuntu ' ~ ansible_distribution_release ~ ' stable') }}"
+
+# GPG key for the APT repo
+telegraf_apt_repo_key: "{{ influxdata_apt_repo_key | default('https://repos.influxdata.com/influxdb.key') }}"
 
 # Package to be installed (explicit version can be specified here)
 telegraf_pkg: telegraf
