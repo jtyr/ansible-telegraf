@@ -21,8 +21,30 @@
   apt_key:
     url: "{{ telegraf_apt_repo_key }}"
     state: present
+    validate_certs: "{{ 'no' if ansible_python_version | version_compare('2.7.9', '<') else omit }}"
   when: >
-    ansible_os_family == 'Debian'
+    ansible_os_family == 'Debian' and
+    ansible_python_version | version_compare('2.7.9', '>=')
+  tags:
+    - telegraf_pkg
+
+- name: Add APT key fallback - check
+  shell: env apt-key list | grep 'InfluxDB Packaging Service'
+  failed_when: false
+  changed_when: false
+  register: telegraf_apt_repo_key_check
+  when: >
+    ansible_os_family == 'Debian' and
+    ansible_python_version | version_compare('2.7.9', '<')
+  tags:
+    - telegraf_pkg
+
+- name: Add APT key fallback
+  shell: env curl {{ telegraf_apt_repo_key }} | apt-key add -
+  when: >
+    ansible_os_family == 'Debian' and
+    telegraf_apt_repo_key_check.rc != 0 and
+    ansible_python_version | version_compare('2.7.9', '<')
   tags:
     - telegraf_pkg
 
@@ -30,6 +52,7 @@
   apt_repository:
     filename: influx
     repo: "{{ telegraf_apt_repo_string }}"
+    validate_certs: "{{ 'no' if ansible_python_version | version_compare('2.7.9', '<') else omit }}"
   when: >
     ansible_os_family == 'Debian'
   tags:
