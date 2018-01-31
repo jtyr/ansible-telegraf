@@ -18,6 +18,11 @@ telegraf_pkg: telegraf
 # Name of the telegraf service
 telegraf_service: telegraf
 
+# Config file permissions
+telegraf_owner: telegraf
+telegraf_group: telegraf
+telegraf_mode: 0640
+
 # Location of the telegraf config file
 telegraf_config_file: /etc/telegraf/telegraf.conf
 

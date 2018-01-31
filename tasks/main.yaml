@@ -70,6 +70,9 @@
   template:
     src: telegraf.conf.j2
     dest: "{{ telegraf_config_file }}"
+    owner: "{{ telegraf_owner }}"
+    group: "{{ telegraf_group }}"
+    mode: "{{ telegraf_mode }}"
   notify:
     - Restart Telegraf service
   tags:
