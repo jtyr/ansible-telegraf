@@ -74,7 +74,7 @@
     group: "{{ telegraf_group }}"
     mode: "{{ telegraf_mode }}"
   notify:
-    - Restart Telegraf service
+    - Reload Telegraf service
   tags:
     - telegraf_config
 

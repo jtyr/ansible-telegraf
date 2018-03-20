@@ -14,7 +14,7 @@ galaxy_info:
       versions:
         - trusty
         - xenial
-  categories:
+  galaxy_tags:
     - monitoring
 dependencies:
   - config_encoder_filters
