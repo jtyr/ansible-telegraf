@@ -240,11 +240,19 @@ telegraf_config_inputs_cpu: "{{
   telegraf_config_inputs_cpu_item__custom }}"
 
 
-# Values of the options of the default disk input table
-telegraf_config_inputs_disk_ignore_fs:
+# Default values of the options of the default disk input table
+telegraf_config_inputs_disk_ignore_fs__default:
   - tmpfs
   - devtmpfs
   - devfs
+
+# Custom values of the options of the default disk input table
+telegraf_config_inputs_disk_ignore_fs__custom: []
+
+# Final values of the options of the default disk input table
+telegraf_config_inputs_disk_ignore_fs: "{{
+  telegraf_config_inputs_disk_ignore_fs__default +
+  telegraf_config_inputs_disk_ignore_fs__custom }}"
 
 # Default options of the disk input table
 telegraf_config_inputs_disk__default:
