@@ -86,10 +86,7 @@ telegraf_yum_repo_url: "{{ influxdata_yum_repo_url | default('https://repos.infl
 telegraf_yum_repo_gpgkey: "{{ influxdata_yum_repo_gpgkey | default('https://repos.influxdata.com/influxdb.key') }}"
 
 # Additional YUM repo params
-telegraf_yum_repo_gpgkey: "{{ influxdata_yum_repo_params | default({}) }}"
-
-# Additional YUM repo params
-telegraf_yum_repo_params: {}
+telegraf_yum_repo_params: "{{ influxdata_yum_repo_params | default({}) }}"
 
 # APT repo string
 telegraf_apt_repo_string: "{{ influxdata_apt_repo_string | default('deb https://repos.influxdata.com/ubuntu ' ~ ansible_facts.distribution_release ~ ' stable') }}"
@@ -98,10 +95,7 @@ telegraf_apt_repo_string: "{{ influxdata_apt_repo_string | default('deb https://
 telegraf_apt_repo_key: "{{ influxdata_apt_repo_key | default('https://repos.influxdata.com/influxdb.key') }}"
 
 # Additional APT repo params
-telegraf_apt_repo_gpgkey: "{{ influxdata_apt_repo_params | default({}) }}"
-
-# Additional APT repo params
-telegraf_apt_repo_params: {}
+telegraf_apt_repo_params: "{{ influxdata_apt_repo_params | default({}) }}"
 
 # Package to be installed (explicit version can be specified here)
 telegraf_pkg: telegraf
