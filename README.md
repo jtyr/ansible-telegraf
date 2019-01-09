@@ -3,7 +3,7 @@ telegraf
 
 Ansible role which installs and configures Telegraf.
 
-The configuraton of the role is done in such way that it should not be necessary
+The configuration of the role is done in such way that it should not be necessary
 to change the role for any kind of configuration. All can be done either by
 changing role parameters or by declaring completely new configuration as a
 variable. That makes this role absolutely universal. See the examples below for
@@ -79,17 +79,29 @@ Role variables
 List of variables used by the role:
 
 ```yaml
-# Yumrepo URL
-telegraf_yumrepo_url: "{{ influxdata_yum_repo_url | default('https://repos.influxdata.com/centos/$releasever/$basearch/stable') }}"
+# YUM repo URL
+telegraf_yum_repo_url: "{{ influxdata_yum_repo_url | default('https://repos.influxdata.com/centos/$releasever/$basearch/stable') }}"
 
-# Yumrepo GPG key URL
-telegraf_yumrepo_gpgkey: "{{ influxdata_yum_repo_gpgkey | default('https://repos.influxdata.com/influxdb.key') }}"
+# YUM repo GPG key URL
+telegraf_yum_repo_gpgkey: "{{ influxdata_yum_repo_gpgkey | default('https://repos.influxdata.com/influxdb.key') }}"
+
+# Additional YUM repo params
+telegraf_yum_repo_gpgkey: "{{ influxdata_yum_repo_params | default({}) }}"
+
+# Additional YUM repo params
+telegraf_yum_repo_params: {}
 
 # APT repo string
-telegraf_apt_repo_string: "{{ influxdata_apt_repo_string | default('deb https://repos.influxdata.com/ubuntu ' ~ ansible_distribution_release ~ ' stable') }}"
+telegraf_apt_repo_string: "{{ influxdata_apt_repo_string | default('deb https://repos.influxdata.com/ubuntu ' ~ ansible_facts.distribution_release ~ ' stable') }}"
 
 # GPG key for the APT repo
 telegraf_apt_repo_key: "{{ influxdata_apt_repo_key | default('https://repos.influxdata.com/influxdb.key') }}"
+
+# Additional APT repo params
+telegraf_apt_repo_gpgkey: "{{ influxdata_apt_repo_params | default({}) }}"
+
+# Additional APT repo params
+telegraf_apt_repo_params: {}
 
 # Package to be installed (explicit version can be specified here)
 telegraf_pkg: telegraf
@@ -114,9 +126,8 @@ telegraf_config_global_tags__custom: {}
 
 # Final options of the global_tags table
 telegraf_config_global_tags: "{{
-  telegraf_config_global_tags__default.update(
-  telegraf_config_global_tags__custom) }}{{
-  telegraf_config_global_tags__default }}"
+  telegraf_config_global_tags__default | combine(
+  telegraf_config_global_tags__custom) }}"
 
 
 # Values of the default options of the agent table
@@ -155,9 +166,8 @@ telegraf_config_agent__custom: {}
 
 # Final options of the agent table
 telegraf_config_agent: "{{
-  telegraf_config_agent__default.update(
-  telegraf_config_agent__custom) }}{{
-  telegraf_config_agent__default }}"
+  telegraf_config_agent__default | combine(
+  telegraf_config_agent__custom) }}"
 
 
 # Values of the options of the default influxdb output table
@@ -182,9 +192,8 @@ telegraf_config_outputs_influxdb__custom: {}
 # Default item of the influxdb output table
 telegraf_config_outputs_influxdb_item__default:
   - "{{
-        telegraf_config_outputs_influxdb__default.update(
-        telegraf_config_outputs_influxdb__custom) }}{{
-        telegraf_config_outputs_influxdb__default }}"
+        telegraf_config_outputs_influxdb__default | combine(
+        telegraf_config_outputs_influxdb__custom) }}"
 
 # Custom item of the influxdb output table
 telegraf_config_outputs_influxdb_item__custom: []
@@ -227,9 +236,8 @@ telegraf_config_inputs_cpu__custom: {}
 # Default item of the cpu input table
 telegraf_config_inputs_cpu_item__default:
   - "{{
-        telegraf_config_inputs_cpu__default.update(
-        telegraf_config_inputs_cpu__custom) }}{{
-        telegraf_config_inputs_cpu__default }}"
+        telegraf_config_inputs_cpu__default | combine(
+        telegraf_config_inputs_cpu__custom) }}"
 
 # Custom item of the cpu input table
 telegraf_config_inputs_cpu_item__custom: []
@@ -264,9 +272,8 @@ telegraf_config_inputs_disk__custom: {}
 # Default item of the disk input table
 telegraf_config_inputs_disk_item__default:
   - "{{
-        telegraf_config_inputs_disk__default.update(
-        telegraf_config_inputs_disk__custom) }}{{
-        telegraf_config_inputs_disk__default }}"
+        telegraf_config_inputs_disk__default | combine(
+        telegraf_config_inputs_disk__custom) }}"
 
 # Custom item of the disk input table
 telegraf_config_inputs_disk_item__custom: []
@@ -286,9 +293,8 @@ telegraf_config_inputs_diskio__custom: {}
 # Default item of the diskio input table
 telegraf_config_inputs_diskio_item__default:
   - "{{
-        telegraf_config_inputs_diskio__default.update(
-        telegraf_config_inputs_diskio__custom) }}{{
-        telegraf_config_inputs_diskio__default }}"
+        telegraf_config_inputs_diskio__default | combine(
+        telegraf_config_inputs_diskio__custom) }}"
 
 # Custom item of the diskio input table
 telegraf_config_inputs_diskio_item__custom: []
@@ -308,9 +314,8 @@ telegraf_config_inputs_kernel__custom: {}
 # Default item of the kernel input table
 telegraf_config_inputs_kernel_item__default:
   - "{{
-        telegraf_config_inputs_kernel__default.update(
-        telegraf_config_inputs_kernel__custom) }}{{
-        telegraf_config_inputs_kernel__default }}"
+        telegraf_config_inputs_kernel__default | combine(
+        telegraf_config_inputs_kernel__custom) }}"
 
 # Custom item of the kernel input table
 telegraf_config_inputs_kernel_item__custom: []
@@ -330,9 +335,8 @@ telegraf_config_inputs_mem__custom: {}
 # Default item of the mem input table
 telegraf_config_inputs_mem_item__default:
   - "{{
-        telegraf_config_inputs_mem__default.update(
-        telegraf_config_inputs_mem__custom) }}{{
-        telegraf_config_inputs_mem__default }}"
+        telegraf_config_inputs_mem__default | combine(
+        telegraf_config_inputs_mem__custom) }}"
 
 # Custom item of the mem input table
 telegraf_config_inputs_mem_item__custom: []
@@ -352,9 +356,8 @@ telegraf_config_inputs_processes__custom: {}
 # Default item of the processes input table
 telegraf_config_inputs_processes_item__default:
   - "{{
-        telegraf_config_inputs_processes__default.update(
-        telegraf_config_inputs_processes__custom) }}{{
-        telegraf_config_inputs_processes__default }}"
+        telegraf_config_inputs_processes__default | combine(
+        telegraf_config_inputs_processes__custom) }}"
 
 # Custom item of the processes input table
 telegraf_config_inputs_processes_item__custom: []
@@ -374,9 +377,8 @@ telegraf_config_inputs_swap__custom: {}
 # Default item of the swap input table
 telegraf_config_inputs_swap_item__default:
   - "{{
-        telegraf_config_inputs_swap__default.update(
-        telegraf_config_inputs_swap__custom) }}{{
-        telegraf_config_inputs_swap__default }}"
+        telegraf_config_inputs_swap__default | combine(
+        telegraf_config_inputs_swap__custom) }}"
 
 # Custom item of the swap input table
 telegraf_config_inputs_swap_item__custom: []
@@ -396,9 +398,8 @@ telegraf_config_inputs_system__custom: {}
 # Default item of the system input table
 telegraf_config_inputs_system_item__default:
   - "{{
-        telegraf_config_inputs_system__default.update(
-        telegraf_config_inputs_system__custom) }}{{
-        telegraf_config_inputs_system__default }}"
+        telegraf_config_inputs_system__default | combine(
+        telegraf_config_inputs_system__custom) }}"
 
 # Custom item of the system input table
 telegraf_config_inputs_system_item__custom: []
@@ -441,9 +442,8 @@ telegraf_config__custom: {}
 
 # Final config
 telegraf_config: "{{
-  telegraf_config__default.update(
-  telegraf_config__custom) }}{{
-  telegraf_config__default }}"
+  telegraf_config__default | combine(
+  telegraf_config__custom) }}"
 ```
 
 The above `telegraf_config` creates the following configuration file:

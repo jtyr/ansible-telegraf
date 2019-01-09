@@ -3,17 +3,20 @@
 - name: Test distribution
   assert:
     that: >
-      ansible_os_family == 'RedHat' or
-      ansible_os_family == 'Debian'
+      ansible_facts.os_family == 'RedHat' or
+      ansible_facts.os_family == 'Debian'
+  tags:
+    - telegraf_assert
 
 - name: Add YUM repo
   yum_repository:
     name: influx
     description: Influx YUM repo
-    baseurl: "{{ telegraf_yumrepo_url }}"
-    gpgkey: "{{ telegraf_yumrepo_gpgkey }}"
+    baseurl: "{{ telegraf_yum_repo_url }}"
+    gpgkey: "{{ telegraf_yum_repo_gpgkey }}"
+  args: "{{ telegraf_yum_repo_params }}"
   when: >
-    ansible_os_family == 'RedHat'
+    ansible_facts.os_family == 'RedHat'
   tags:
     - telegraf_pkg
 
@@ -21,10 +24,10 @@
   apt_key:
     url: "{{ telegraf_apt_repo_key }}"
     state: present
-    validate_certs: "{{ 'no' if ansible_python_version | version_compare('2.7.9', '<') else omit }}"
+    validate_certs: "{{ 'no' if ansible_facts.python_version | version_compare('2.7.9', '<') else omit }}"
   when: >
-    ansible_os_family == 'Debian' and
-    ansible_python_version | version_compare('2.7.9', '>=')
+    ansible_facts.os_family == 'Debian' and
+    ansible_facts.python_version | version_compare('2.7.9', '>=')
   tags:
     - telegraf_pkg
 
@@ -34,17 +37,17 @@
   changed_when: false
   register: telegraf_apt_repo_key_check
   when: >
-    ansible_os_family == 'Debian' and
-    ansible_python_version | version_compare('2.7.9', '<')
+    ansible_facts.os_family == 'Debian' and
+    ansible_facts.python_version | version_compare('2.7.9', '<')
   tags:
     - telegraf_pkg
 
 - name: Add APT key fallback
   shell: env curl {{ telegraf_apt_repo_key }} | apt-key add -
   when: >
-    ansible_os_family == 'Debian' and
+    ansible_facts.os_family == 'Debian' and
     telegraf_apt_repo_key_check.rc != 0 and
-    ansible_python_version | version_compare('2.7.9', '<')
+    ansible_facts.python_version | version_compare('2.7.9', '<')
   tags:
     - telegraf_pkg
 
@@ -52,9 +55,10 @@
   apt_repository:
     filename: influx
     repo: "{{ telegraf_apt_repo_string }}"
-    validate_certs: "{{ 'no' if ansible_python_version | version_compare('2.7.9', '<') else omit }}"
+    validate_certs: "{{ 'no' if ansible_facts.python_version | version_compare('2.7.9', '<') else omit }}"
+  args: "{{ telegraf_apt_repo_params }}"
   when: >
-    ansible_os_family == 'Debian'
+    ansible_facts.os_family == 'Debian'
   tags:
     - telegraf_pkg
 
@@ -82,9 +86,13 @@
   service:
     name: "{{ telegraf_service }}"
     enabled: yes
+  tags:
+    - telegraf_service
 
 - name: Make sure Telegraf service is running
   service:
     name: "{{ telegraf_service }}"
     state: started
   register: telegraf_service_started
+  tags:
+    - telegraf_service
