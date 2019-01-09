@@ -16,7 +16,7 @@ telegraf_apt_repo_string: "{{ influxdata_apt_repo_string | default('deb https://
 telegraf_apt_repo_key: "{{ influxdata_apt_repo_key | default('https://repos.influxdata.com/influxdb.key') }}"
 
 # Additional APT repo params
-telegraf_apt_repo_paramas: "{{ influxdata_apt_repo_params | default({}) }}"
+telegraf_apt_repo_params: "{{ influxdata_apt_repo_params | default({}) }}"
 
 # Package to be installed (explicit version can be specified here)
 telegraf_pkg: telegraf
