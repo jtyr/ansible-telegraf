@@ -24,10 +24,10 @@
   apt_key:
     url: "{{ telegraf_apt_repo_key }}"
     state: present
-    validate_certs: "{{ 'no' if ansible_facts.python_version | version_compare('2.7.9', '<') else omit }}"
+    validate_certs: "{{ 'no' if ansible_facts.python_version is version('2.7.9', '<') else omit }}"
   when: >
     ansible_facts.os_family == 'Debian' and
-    ansible_facts.python_version | version_compare('2.7.9', '>=')
+    ansible_facts.python_version is version('2.7.9', '>=')
   tags:
     - telegraf_pkg
 
@@ -38,7 +38,7 @@
   register: telegraf_apt_repo_key_check
   when: >
     ansible_facts.os_family == 'Debian' and
-    ansible_facts.python_version | version_compare('2.7.9', '<')
+    ansible_facts.python_version is version('2.7.9', '<')
   tags:
     - telegraf_pkg
 
@@ -47,7 +47,7 @@
   when: >
     ansible_facts.os_family == 'Debian' and
     telegraf_apt_repo_key_check.rc != 0 and
-    ansible_facts.python_version | version_compare('2.7.9', '<')
+    ansible_facts.python_version is version('2.7.9', '<')
   tags:
     - telegraf_pkg
 
@@ -55,7 +55,7 @@
   apt_repository:
     filename: influx
     repo: "{{ telegraf_apt_repo_string }}"
-    validate_certs: "{{ 'no' if ansible_facts.python_version | version_compare('2.7.9', '<') else omit }}"
+    validate_certs: "{{ 'no' if ansible_facts.python_version is version('2.7.9', '<') else omit }}"
   args: "{{ telegraf_apt_repo_params }}"
   when: >
     ansible_facts.os_family == 'Debian'
